@@ -1,10 +1,17 @@
-from urllib import parse
 import posixpath
 import logging
 
 import github3
 import semantic_version
 
+
+try:
+    # If the version of python is 3 or above, import
+    # urlparse from urllib.parse package.
+    from urllib.parse import urlparse
+except ImportError:
+    # Otherwise import it from the urlparse package.
+    from urlparse import urlparse
 log = logging.getLogger(__name__)
 
 
@@ -12,7 +19,7 @@ class GitHubRepos:
     def __init__(self, repos_url):
         self.repos_url = repos_url
 
-        o = parse.urlparse(self.repos_url)
+        o = urlparse(self.repos_url)
         # github.com/<owner>/<project>[.git]
         self.owner, self.project = posixpath.split(o.path[1:])
         if self.project.endswith('.git'):
